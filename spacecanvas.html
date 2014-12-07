@@ -1,0 +1,175 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<!doctype html>
+<HTML>
+	<HEAD>
+		<TITLE>Space Canvas</TITLE>
+	</HEAD>
+	<BODY>
+		<canvas id="myCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas> 
+		<script>
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			var earthAngle = 154;
+			var venusAngle = 170;
+			var mercuryAngle = 245;
+			var marsAngle = 80;
+			var moonAngle = 85;
+			var venusMoonAngle = 66;
+			reDraw();
+
+
+			function orbit(x, y, angle, radius, originx, originy) {
+				var newCood = {};
+				var radians = (angle / 360) * (2 * Math.PI);
+
+				var s = Math.sin(radians);
+				var c = Math.cos(radians);
+
+				// translate point back to origin
+				//var nx = x - 400;
+				//var ny = y - 300;
+				var nx = originx - x;
+				var ny = originy - y;
+
+				// rotate point
+				var xnew = nx * c - ny * s;
+				var ynew = nx * s + ny * c;
+
+				// translate point back:
+				nx = xnew + originx;
+				ny = ynew + originy;
+				//console.log(nx);
+				//console.log(ny);
+
+				ctx.fillStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.arc(nx,ny,radius,0,2*Math.PI);
+				ctx.closePath();
+				ctx.fill();
+				newCood.x = nx;
+				newCood.y = ny;
+				return newCood;
+
+			}
+			var timer = setInterval(function() {
+				reDraw();
+				//earthAngle+=1/3;
+				earthAngle++;
+				if (earthAngle >= 360) { earthAngle = 0; }
+				var newEarthAngles = orbit(620,300,earthAngle, 20, 400, 300);
+				moonAngle-=2;
+				if (moonAngle >= 360) { moonAngle = 0; }
+				orbit(newEarthAngles.x - 30,newEarthAngles.y - 30,moonAngle, 5, newEarthAngles.x, newEarthAngles.y);
+
+				//venusAngle+=1/2;
+				venusAngle+=2;
+				if (venusAngle >= 360) { venusAngle = 0; }
+				var newVenusAngles = orbit(575,300,venusAngle, 17, 400, 300);
+
+				venusMoonAngle+=4;
+				if (venusMoonAngle >= 360) { venusMoonAngle = 0; }
+				orbit(newVenusAngles.x - 40,newVenusAngles.y - 40,venusMoonAngle, 12, newVenusAngles.x, newVenusAngles.y);
+
+				//marsAngle+=1/4;
+				marsAngle+=1/2;
+				if (marsAngle >= 360) { marsAngle = 0; }
+				orbit(690,300,marsAngle, 13, 400, 300);
+				//mercuryAngle++;
+				mercuryAngle+=3;
+				if (mercuryAngle >= 360) { mercuryAngle = 0; }
+				orbit(520,300,mercuryAngle, 13, 400, 300);
+			}, 1000 / 75);
+
+			function reDraw() {
+				ctx.clearRect ( 0 , 0 , c.width, c.height );
+				ctx.fillStyle = "#000000";
+				ctx.fillRect(0,0,800,600);
+
+				// Create gradient - SUN
+				var grdSUN = ctx.createRadialGradient(370,300,25,400,300,100);
+				grdSUN.addColorStop(0,"#FFA600");
+				grdSUN.addColorStop(1,"#FFFFFF");
+
+				// Create gradient - Mercury
+				var grdMERC = ctx.createRadialGradient(520,300,15,545,300,20);
+				grdMERC.addColorStop(0,"#AAA8BF");
+				grdMERC.addColorStop(1,"#FFFFFF");
+
+
+				ctx.strokeStyle = "#FFFFFF";
+				ctx.lineWidth = 3;
+				// Mercury
+				ctx.beginPath();
+				ctx.arc(400,300,120,0,2*Math.PI);
+				ctx.closePath();
+				ctx.stroke();
+
+				// Venus
+				ctx.beginPath();
+				ctx.arc(400,300,175,0,2*Math.PI);
+				ctx.closePath();
+				ctx.stroke();
+
+				// Earth
+				ctx.beginPath();
+				ctx.arc(400,300,220,0,2*Math.PI);
+				ctx.closePath();
+				ctx.stroke();
+
+				// Mars
+				ctx.beginPath();
+				ctx.arc(400,300,290,0,2*Math.PI);
+				ctx.closePath();
+				ctx.stroke();
+
+				// TEST
+				//var grdMERC = ctx.createRadialGradient(10,10,15,100,100,40);
+				//grdMERC.addColorStop(0,"#AAA8BF");
+				//grdMERC.addColorStop(1,"#FFFFFF");
+				//ctx.fillStyle = grdMERC;
+				//ctx.fillRect(10,10,100,100);
+				//ctx.fill();
+
+				// Draw SUN
+				ctx.fillStyle = grdSUN;
+				ctx.beginPath();
+				ctx.arc(400,300,50,0,2*Math.PI);
+				ctx.closePath();
+				ctx.fill();
+/*
+				// Draw Mercury
+				ctx.fillStyle = grdMERC;
+				//ctx.fillStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.arc(520,300,13,0,2*Math.PI);
+				ctx.closePath();
+				ctx.fill();
+
+				// Draw Venus
+				//ctx.fillStyle = grdEARTH;
+				ctx.fillStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.arc(575,300,17,0,2*Math.PI);
+				ctx.closePath();
+				ctx.fill();
+
+				// Draw Earth
+				//ctx.fillStyle = grdEARTH;
+				//ctx.fillStyle = "#FFFFFF";
+				//ctx.beginPath();
+				//ctx.arc(620,300,20,0,2*Math.PI);
+				//ctx.closePath();
+				//ctx.fill();
+
+				// Draw Mars
+				//ctx.fillStyle = grdEARTH;
+				ctx.fillStyle = "#FFFFFF";
+				ctx.beginPath();
+				ctx.arc(690,300,13,0,2*Math.PI);
+				ctx.closePath();
+				ctx.fill();*/
+			}
+			
+		</script>
+	</BODY>
+</HTML>
